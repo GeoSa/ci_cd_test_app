@@ -1,0 +1,22 @@
+name: CI/CD cycle
+
+on:
+  push:
+    brances: ['main', 'dev']
+
+jobs:
+  - uses: actions/checkout@main
+  - uses: actions/setup-python@v3
+    with:
+      python-version: '3.10'
+      architecture: 'x64'
+  - name: Install requirements
+    run: pip install -r requirements.txt
+  - name: Run flake8
+    run: flake8 .
+  - name: Run mypy
+    run: mypy .
+  - name: Run tests
+    run: coverage test_app.py
+  - name: Tests report
+    run: coverage report
