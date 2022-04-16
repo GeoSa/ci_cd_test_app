@@ -25,6 +25,6 @@ jobs:
       - name: Run mypy
         run: mypy .
       - name: Run tests
-        run: coverage test_app.py
+        run: coverage run test_app.py
       - name: Tests report
         run: coverage report
