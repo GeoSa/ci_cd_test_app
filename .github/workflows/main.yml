@@ -9,7 +9,6 @@ on:
       - main
     types:
       - open
-      - close
 
 jobs:
   build:
@@ -38,13 +37,14 @@ jobs:
       - uses: actions/checkout@v3
       - name: Show ref_name
         run: echo ${GITHUB_REF_NAME}
-      - name: Show ref
+      - name: Show sha
         run: |
           echo ${GITHUB_SHA}
           echo ${GITHUB_SHA:30}
+          echo ${{ github.event.push }}
   
   build_and_pub:
-    if: (!((github.event.action == 'closed' || github.event.action == 'open') && github.event.pull_request.merged != true))
+    if: github.event.pull_request.merged == true || github.event.push
     needs: [ build ]
     runs-on: ubuntu-latest
     env:
