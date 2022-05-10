@@ -31,8 +31,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Show envirinment
-        run: echo ${{ github.event.pull_request }}
+      - name: Show ref_name
+        run: echo ${GITHUB_REF_NAME}
+      - name: Show ref
+        run: echo ${GITHUB_REF}
   
   build_and_pub:
     needs: [ build ]
