@@ -6,8 +6,6 @@ on:
   pull_request:
     branches: [ main, dev ]
 
-  workflow_dispatch:
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -29,6 +27,13 @@ jobs:
       - name: Tests report
         run: coverage report
   
+  test_work:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Show envirinment
+        run: echo ${{ github.event.pull_request }}
+  
   build_and_pub:
     needs: [ build ]
     runs-on: ubuntu-latest
@@ -40,6 +45,6 @@ jobs:
         run: echo ${{ secrets.DOCKER_PASS }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
       - uses: actions/checkout@v3
       - name: Build image
-        run: docker build -t $LOGIN/$NAME:${GITHUB_REF:11} -f Dockerfile .
+        run: docker build -t $LOGIN/$NAME:${GITHUB_REF_NAME} -f Dockerfile .
       - name: Push image to docker
-        run: docker push $LOGIN/$NAME:${GITHUB_REF:11}
+        run: docker push $LOGIN/$NAME:${GITHUB_REF_NAME}
