@@ -44,7 +44,7 @@ jobs:
           echo ${{ github.event.push }}
   
   build_and_pub:
-    if: github.event.pull_request.merged == true || github.event.push
+    if: (!(github.event.action == 'closed' && github.event.pull_request.merged != true))
     needs: [ build ]
     runs-on: ubuntu-latest
     env:
