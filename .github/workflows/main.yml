@@ -31,6 +31,7 @@ jobs:
         run: coverage report
   
   test_work:
+    if: (!(github.event_name == 'pull_request' && github.event.action == 'opened'))
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -42,18 +43,18 @@ jobs:
           echo ${GITHUB_SHA:30}
           echo ${{ github.event.push }}
   
-  build_and_pub:
-    if: (!(github.event.action == 'closed' && github.event.pull_request.merged != true))
-    needs: [ build ]
-    runs-on: ubuntu-latest
-    env:
-      LOGIN: ${{ secrets.DOCKER_USERNAME }}
-      NAME: ${{ secrets.DOCKER_FOLDER }}
-    steps:
-      - name: Login to docker.io
-        run: echo ${{ secrets.DOCKER_PASS }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
-      - uses: actions/checkout@v3
-      - name: Build image
-        run: docker build -t $LOGIN/$NAME:${GITHUB_REF_NAME} -f Dockerfile .
-      - name: Push image to docker
-        run: docker push $LOGIN/$NAME:${GITHUB_REF_NAME}
+#  build_and_pub:
+#    if: (!(github.event.action == 'closed' && github.event.pull_request.merged != true))
+#    needs: [ build ]
+#    runs-on: ubuntu-latest
+#    env:
+#      LOGIN: ${{ secrets.DOCKER_USERNAME }}
+#      NAME: ${{ secrets.DOCKER_FOLDER }}
+#    steps:
+#      - name: Login to docker.io
+#        run: echo ${{ secrets.DOCKER_PASS }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+#      - uses: actions/checkout@v3
+#      - name: Build image
+#        run: docker build -t $LOGIN/$NAME:${GITHUB_REF_NAME} -f Dockerfile .
+#      - name: Push image to docker
+#        run: docker push $LOGIN/$NAME:${GITHUB_REF_NAME}
