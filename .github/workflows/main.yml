@@ -7,7 +7,6 @@ on:
   pull_request:
     branches: 
       - main
-    types: [opened, synchronize, closed]
 
 jobs:
   build:
@@ -31,7 +30,7 @@ jobs:
         run: coverage report
   
   test_work:
-    if: (!(github.event_name == 'pull_request' && github.event.action == 'opened'))
+    if: (!(github.event_name == 'pull_request'))
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
