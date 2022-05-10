@@ -2,9 +2,14 @@ name: CI
 
 on:
   push:
-    branches: [ main, dev ]
+    branches:
+      - main
   pull_request:
-    branches: [ main, dev ]
+    branches: 
+      - main
+    types:
+      - open
+      - close
 
 jobs:
   build:
@@ -34,7 +39,9 @@ jobs:
       - name: Show ref_name
         run: echo ${GITHUB_REF_NAME}
       - name: Show ref
-        run: echo ${GITHUB_REF}
+        run: |
+          echo ${GITHUB_SHA}
+          echo ${GITHUB_SHA:10}
   
   build_and_pub:
     needs: [ build ]
