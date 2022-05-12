@@ -1,5 +1,27 @@
-FROM python:3.10-alpine
-COPY ./ /app
-RUN pip install -r /app/requirements.txt --no-cache-dir
+FROM python:3.9-slim as builder
+
+WORKDIR /app
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends gcc
+
+
+COPY requirements.txt ./
+
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir /app/wheels -r requirements.txt
+
+
+FROM python:3.9-slim
+
+WORKDIR /app
+
+COPY --from=builder /app/wheels /wheels
+COPY --from=builder /app/requirements.txt .
+
+RUN pip install --no-cache /wheels/*
+
+COPY . .
+
 EXPOSE 8080
-CMD python /app/app.py
+
+CMD ["python", "app.py"]
